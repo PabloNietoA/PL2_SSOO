@@ -9,9 +9,11 @@
 #include <sys/stat.h>
 #include <errno.h>
 
-#include "internas.h"
-#include "entrada_minishell.h"
 #include "ejecutar.h"
+#include "entrada_minishell.h"
+#include "internas.h"
+#include "libmemoria.h"
+#include "parser.h"
 
 
 int main(int argc, char *argv[])
@@ -23,11 +25,15 @@ int main(int argc, char *argv[])
    while (1)
    {
    	imprimir_prompt();
-   	scanf("%c", entrada);
-	leer_linea_ordenes(*entrada);
-	if (fgets(buf) == "exit") {
-		break;
-	}   
+	leer_linea_ordenes(buf);
+	if (!strcmp(buf, "exit")) { //strcmp devuelve 0 si dos strings son iguales
+		exit(0);
+	}
+	if (es_ord_interna(buf)) {
+		ejecutar_ord_interna(buf);
+	} else {
+		ejecutar_linea_ordenes(buf);
+	}
    }
 
    return 0;
