@@ -23,7 +23,7 @@ pid_t ejecutar_orden(const char *orden, int *pbackgr)
 		perror("Error en el fork");
 		exit(-1);
    	} else if (pid == 0) { // si es la minishell hija ejecuta la orden
-   		execvp(orden, args);
+   		execvp(args[0], args);
    		return(-1);
    	} else {
    		free_argumentos(args); //si es la minishell padre devuelve el pid de la hija
@@ -59,14 +59,5 @@ void ejecutar_linea_ordenes(const char *orden)
    pid = ejecutar_orden(orden, &backgr);
    if (!backgr) {
 	wait(&estado);
-   } else {
-   	printf("segundo plano\n"); //se queda zombie, no pasara cuando este el waitpid
-   }
-   
-
-      
-       
- 
-
-
+	}
 }   
