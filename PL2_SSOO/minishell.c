@@ -18,7 +18,7 @@
 static void manejar_sigchild(int signo)
 {
 	int estado;
-	waitpid(-1, &estado, WNOHANG);
+	waitpid(-1, &estado, WNOHANG); /*espera a que le pase algo a un hijo (muera, se detenga, se reanude) -1 es para que afecte a todos los procesos hijos, &estado al haberlo declarado antes no es nulo por lo que guardará la información en el entero al que apunta. WNOHANG devuelve inmediatamente si ningún hijo se ha muerto DEVUELVE -1 si ha habido un error. 0 si ningún hijo ha cambiado el estado y el PID del hijo que ha cambiado si funciona correctamente*/
 }
 
 int main(int argc, char *argv[])
@@ -28,10 +28,10 @@ int main(int argc, char *argv[])
    char entrada;
    struct sigaction sa;
    
-   memset(&sa, 0, sizeof(sa));
-   sa.sa_handler = manejar_sigchild;
+   memset(&sa, 0, sizeof(sa)); /*memset establece la memoria a partir de &sa con 0 un total de sizeof(sa) bits*/
+   sa.sa_handler = manejar_sigchild; /*hacemos que el manejador (handler) de la estructura sa apunte a la función manejar_sigchild, declarada anteriormente*/
    sa.sa_flags = SA_NOCLDSTOP | SA_RESTART;
-   
+   	
    sigaction(SIGCHLD, &sa, NULL);
    
    while (1)
