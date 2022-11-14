@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <string.h>
+#include <errno.h>
 
 #include "parser.h"
 #include "ejecutar.h"
@@ -24,7 +26,7 @@ pid_t ejecutar_orden(const char *orden, int *pbackgr)
 		exit(-1);
    	} else if (pid == 0) { // si es la minishell hija ejecuta la orden
    		execvp(args[0], args);
-   		return(-1);
+   		exit(-1);
    	} else {
    		free_argumentos(args); //si es la minishell padre devuelve el pid de la hija
    		return(pid);
@@ -47,17 +49,18 @@ pid_t ejecutar_orden(const char *orden, int *pbackgr)
  
 void ejecutar_linea_ordenes(const char *orden)
 {
-   pid_t pid;
    int backgr;
    int estado;
-
-
-   /* Si la orden es compuesta, podra incluir aqui, en otra fase de la */
-   /* practica, el codigo para su tratamiento                          */
- 
-
-   pid = ejecutar_orden(orden, &backgr);
-   if (!backgr) {
-	wait(&estado);
+   char * aux = orden;
+   char * token;
+   const char * delim = ";";
+   
+   token = strtok(aux, delim);
+   while (token !=NULL) {
+	ejecutar_orden(token, &backgr);
+   	if (!backgr || errno == -1) {
+		wait(&estado);
 	}
+	token = strtok(NULL, delim);
+   }
 }   
