@@ -11,13 +11,7 @@
                                   
 void redirec_entrada(char **args, int indice_entrada, int *entrada)
 {
-   
-
-
-
-
-
-
+	*entrada = open(args[indice_entrada+1],NULL);
 }
 
 /* funcion que abre el archivo situado en la posicion indice_salida+1 */
@@ -25,11 +19,6 @@ void redirec_entrada(char **args, int indice_entrada, int *entrada)
 
 void redirec_salida(char **args, int indice_salida, int *salida)
 {
-   
-
-
-
-
-
+	*salida = open(args[indice_salida+1],NULL);
 }
 

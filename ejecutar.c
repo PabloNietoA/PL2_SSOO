@@ -14,12 +14,15 @@ pid_t ejecutar_orden(const char *orden, int *pbackgr)
 {
    char **args;
    pid_t pid;
+   int entrada = 0, salida = 1; //Se guardan los descriptores de archivo (por defecto 0 y 1)
    int indice_ent = -1, indice_sal = -1; /* por defecto, no hay < ni > */
   
    if ((args = parser_orden(orden, &indice_ent, &indice_sal, pbackgr)) == NULL)
    {
       return(-1);
    } else {
+   	if(indice_ent != -1) redirec_entrada(args, indice_ent, &entrada);
+   	if(indice_sal != -1) redirec_salida(args, indice_sal, &salida);
    	pid = fork();
    	if(pid == -1) {
 		perror("Error en el fork");
@@ -35,7 +38,7 @@ pid_t ejecutar_orden(const char *orden, int *pbackgr)
 
    /* Si la linea de ordenes posee tuberias o redirecciones, podra incluir */
    /* aqui, en otras fases de la practica, el codigo para su tratamiento.  */
-	
+   
 	
 	
 	

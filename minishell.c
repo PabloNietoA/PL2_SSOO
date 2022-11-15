@@ -25,7 +25,6 @@ int main(int argc, char *argv[])
 {
 
    char buf[BUFSIZ];
-   char entrada;
    struct sigaction sa;
    
    memset(&sa, 0, sizeof(sa)); /*memset establece la memoria a partir de &sa con 0 un total de sizeof(sa) bits*/
