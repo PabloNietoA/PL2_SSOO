@@ -1,7 +1,7 @@
 CFLAGS = -g -Wall
 minishell: ejecutar.o entrada_minishell.o libmemoria.o minishell.o redirecciones.o libshell.a
 	gcc $(CFLAGS) ejecutar.o entrada_minishell.o libmemoria.o minishell.o redirecciones.o libshell.a -o minishell
-ejecutar.o: ejecutar.c parser.h ejecutar.h libmemoria.h
+ejecutar.o: ejecutar.c parser.h ejecutar.h libmemoria.h internas.h
 	gcc $(CFLAGS) -c ejecutar.c
 entrada_minishell.o: entrada_minishell.c entrada_minishell.h
 	gcc $(CFLAGS) -c entrada_minishell.c
