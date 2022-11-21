@@ -9,6 +9,7 @@
 #include "ejecutar.h"
 #include "libmemoria.h"
 #include "internas.h"
+#include "redirecciones.h"
 
 
 pid_t ejecutar_orden(const char *orden, int *pbackgr)
@@ -21,6 +22,7 @@ pid_t ejecutar_orden(const char *orden, int *pbackgr)
   
    	if (es_ord_interna(orden)) {
    			ejecutar_ord_interna(orden);
+   			return (-1);
    	}
    	else if ((args = parser_orden(orden, &indice_ent, &indice_sal, pbackgr)) == NULL)
    	{
@@ -62,7 +64,7 @@ void ejecutar_linea_ordenes(const char *orden)
 {
    int backgr;
    int estado;
-   char * aux = orden;
+   char * aux = (char*) orden;
    char * token;
    const char * delim = ";";
    
