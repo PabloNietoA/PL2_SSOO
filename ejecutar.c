@@ -64,7 +64,11 @@ void ejecutar_linea_ordenes(const char *orden)
 {
    int backgr;
    int estado;
+<<<<<<< HEAD
    char * aux = (char*) orden;
+=======
+   char * aux = (char*)orden;
+>>>>>>> fdd5c030a96575eae98ef64eea54adfa66b281ec
    char * token;
    const char * delim = ";";
    
