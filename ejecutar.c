@@ -37,11 +37,25 @@ pid_t ejecutar_orden(const char *orden, int *pbackgr)
 			exit(-1);
    		}
    		else if (pid == 0) { // si es la minishell hija ejecuta la orden
-   			execvp(args[0], args);
-   			exit(-1);
-   		}
+   			if (entrada != 0) {
+                   dup2(entrada, STDIN_FILENO); // duplicamos la entrada en STDIN_FILENO
+                   args[indice_ent] = NULL-0; // con estas dos líneas borramos
+                   args[indice_ent+1] = NULL-0; // la redirección y el archivo
+                   close(entrada);
+               }
+               if (salida != 1) {
+                   dup2(salida, STDOUT_FILENO); // duplicamos la salida en STDOUT_FILENO
+                   args[indice_sal] = NULL-0; // con estas dos líneas borramos
+                   args[indice_sal+1] = NULL-0; // la redirección y el archivo
+                   close(salida);
+               }
+               execvp(args[0], args);
+               exit(-1);
+        }
    		else {
    			free_argumentos(args); //si es la minishell padre devuelve el pid de la hija
+   			if (entrada != 0) close(entrada); //cerramos la entrada si hay redireccion
+   			if (salida != 1) close(salida); //cerramos la salida si hay redireccion
    			return(pid);
    		}
    	}
