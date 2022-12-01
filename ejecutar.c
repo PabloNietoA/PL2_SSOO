@@ -117,22 +117,15 @@ void ejecutar_linea_ordenes(const char *orden)
 				salida = STDOUT_FILENO;
 			}
 			ejecutar_orden(ordenes[i], STDIN_FILENO, salida, &backgr);
-			if (!backgr || errno == -1) {
-				wait(&estado);
-			}
 		} else if ((i == (nordenes - 1)) && (nordenes > 1)) {
 			entrada = pipes[nordenes-2][0];
 			ejecutar_orden(ordenes[i], entrada, STDOUT_FILENO, &backgr);
-			if (!backgr || errno == -1) {
-				wait(&estado);
-			}
 		} else {
 			entrada = pipes[i-1][0];
 			salida = pipes[i][1];
 			ejecutar_orden(ordenes[i], entrada, salida, &backgr);
-			if (!backgr || errno == -1) {
-				wait(&estado);
-			}
+		} if (!backgr || errno == -1) {
+			wait(&estado);
 		}
 	}
 	token = strtok(NULL, delim);
