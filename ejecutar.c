@@ -15,12 +15,12 @@ int ** crear_pipes (int nordenes)
 {
 	int ** pipes = NULL ;
 	int i ;
-	pipes = (int **) malloc(sizeof(int *) * (nordenes - 1));
+	pipes = (int **) malloc(sizeof(int *) * (nordenes - 1)); //reservamos memoria dinámica para los pipes que tengamos que hacer
 	
 	for (i = 0;i < (nordenes - 1);i++)
 	{
-		pipes[i] = (int *) malloc(sizeof(int ) * 2);
-		pipe(pipes[i]);
+		pipes[i] = (int *) malloc(sizeof(int ) * 2); //reservamos memoria para insertar los descriptores de lectura y escritura
+		pipe(pipes[i]);	//creamos un pipe por cada espacio libre
 	}
 	return (pipes);
 }
@@ -75,20 +75,7 @@ pid_t ejecutar_orden(const char *orden, int entrada, int salida, int *pbackgr)
    			}
    			return(pid);
    		}
-   	}
-
-   	/* Si la linea de ordenes posee tuberias o redirecciones, podra incluir */
-   	/* aqui, en otras fases de la practica, el codigo para su tratamiento.  */
-   
-	
-	
-	
-	
-	
-	
-	
-	
-	
+   	}	
 }
  
 void ejecutar_linea_ordenes(const char *orden)
@@ -104,31 +91,31 @@ void ejecutar_linea_ordenes(const char *orden)
    int entrada;
    int salida;
    
-   token = strtok(aux, delim);
-   while (token !=NULL) {
+   token = strtok(aux, delim); 	//dividimos la línea de órdenes con ";" y las separamos 
+   while (token !=NULL) { 	//mientras que siga habiendo caracteres que separar sigue ejecutando
       	ordenes = parser_pipes(token, &nordenes);
-   	pipes = crear_pipes(nordenes);
-	for (int i = 0; i<=(nordenes-1); i++) {
+   	pipes = crear_pipes(nordenes); 
+	for (int i = 0; i<=(nordenes-1); i++) { 	//hacemos un bucle con el numero de ordenes que devuelve el parser
 		if (i == 0) {
 			if (nordenes > 1) {
-				salida = pipes[0][1];
+				salida = pipes[0][1]; 	//si es la primera orden y hay más se redirecciona la salida
 			}
 			else {
-				salida = STDOUT_FILENO;
+				salida = STDOUT_FILENO; //si es la primera y única orden se ejecuta tal cual
 			}
 			ejecutar_orden(ordenes[i], STDIN_FILENO, salida, &backgr);
-		} else if ((i == (nordenes - 1)) && (nordenes > 1)) {
-			entrada = pipes[nordenes-2][0];
+		} else if ((i == (nordenes - 1)) && (nordenes > 1)) { 	//si es la última orden y hay varias (si no sería ejecutar tal cual)
+			entrada = pipes[nordenes-2][0];			//redireccionamos la entrada y ejecutamos la orden
 			ejecutar_orden(ordenes[i], entrada, STDOUT_FILENO, &backgr);
 		} else {
-			entrada = pipes[i-1][0];
-			salida = pipes[i][1];
+			entrada = pipes[i-1][0];	//si es una orden intermedia redireccionamos la
+			salida = pipes[i][1];		//entrada y la salida y la ejecutamos
 			ejecutar_orden(ordenes[i], entrada, salida, &backgr);
-		} if (!backgr || errno == -1) {
-			wait(&estado);
+		} if (!backgr || errno == -1) {		//por cada orden esperamos a que el proceso hijo acabe
+			wait(&estado);			//antes de ejecutar el siguiente
 		}
 	}
-	token = strtok(NULL, delim);
+	token = strtok(NULL, delim);	//la función strtok sigue funcionando con la entrada original si le pasamos NULL
    }
-   free_ordenes_pipes (ordenes, pipes, nordenes);
+   free_ordenes_pipes (ordenes, pipes, nordenes); //liberamos la memoria dinámica que estábamos usando
 }   
